@@ -1,0 +1,13 @@
+<h1 class="display-1 text-center mt-5">SAVE AUTHOR</h1>
+<form action="/category/category-add" method="POST" onsubmit="return confirm('You sure you want to save this category?');" class="border p-4 rounded bg-light">
+    <div class="mb-3">
+        <label for="name" class="form-label">Name:</label>
+        <input type="text" id="name" name="name" class="form-control"required>
+    </div>
+     <div class="mb-3">
+        <label for="description" class="form-label">Description:</label>
+        <input type="text" id="description" name="description" class="form-control"required>
+    </div>
+         <a href="/category/category-mant" class="btn btn-info">Go back</a>
+         <button type="submit" class="btn btn-primary">Save category</button>
+</form>
