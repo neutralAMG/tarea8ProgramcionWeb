@@ -14,11 +14,11 @@ const Book = connection.define( "Book",{
     },
     publicationYear:{
         type: DataTypes.DATE,
-        allowNull: null
+        allowNull: false
     },
-    coverImg:{
+    coverImgPath:{
         type: DataTypes.STRING,
-        allowNull: null
+        allowNull: true
     },
     categoryId:{
         type: DataTypes.INTEGER,

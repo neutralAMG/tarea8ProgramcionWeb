@@ -3,9 +3,14 @@ const book = require("../Models/book");
 const authorMantRoute = "/author/author-mant";
 
 exports.GetAllAuthorsMant = (req, res, next)=>{
-    author.findAll().then((result) => {
+    author.findAll().then( async (result) => {
 
      const authors = result.map((a) => a.dataValues);
+     await Promise.all(authors.map(async (a) =>{
+        const result =  await book.findAndCountAll({where:{authorId:a.id}})
+         a.bookCount = result.count
+         return a;
+     }))  
 
      return res.render(getViewByLastPart("mant"),{
         authors: authors,

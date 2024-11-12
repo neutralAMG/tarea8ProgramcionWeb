@@ -1,0 +1,13 @@
+
+<a href="/book/book-index" class="btn btn-info mt-5 mb-2"> Go back</a>
+<div class="card">
+    <div class="card-body">
+        <img src="{{book.coverImgPath}}" alt="{{book.title}}" class="card-img-top">
+        <h5 class="card-title">{{book.title}}</h5>
+        <h5 class="card-title">{{book.publicationYear}}</h5>
+        <div class="card-footer">
+                <p class="card-text text-muted"><strong>Author:</strong> {{book.Author.dataValues.name}}</p>
+                <p class="card-text  text-muted"><strong>Editorial:</strong> {{book.Editorial.dataValues.name}}</p> 
+                <p class="card-text  text-muted"><strong>Category:</strong> {{book.Category.dataValues.name}}</p> 
+        </div>
+    </div>

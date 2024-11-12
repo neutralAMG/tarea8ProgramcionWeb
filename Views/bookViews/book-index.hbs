@@ -1,1 +1,30 @@
-<h1>Hola</h1>
+<h1 class="display-1 text-center mt-5">LIBRARY</h1>
+<div class="col-8">
+  
+{{#if IsEmpty}}
+    <h1 class="text-center">There is no books</h1>
+{{else}}
+    <div class="row">
+        {{#each books}}
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <a href="/book/book-detail/{{this.id}}" class="">
+                    <img src="{{this.coverImgPath}}" alt="{{title}}" class="card-img-top img-responsive">
+               
+                    <div class="card-body">
+                        <h5 class="card-title text-center text-primary">{{this.title}}</h5>
+                        <h5 class="card-title text-center text-primary">{{this.publicationYear}}</h5>
+                        <div class="d-flex justify-content-between">
+                           <p class="card-text text-muted"><strong>Author:</strong> {{this.Author.dataValues.name}}</p>
+                           <p class="card-text  text-muted"><strong>Editorial:</strong> {{this.Editorial.dataValues.name}}</p> 
+                           <p class="card-text  text-muted"><strong>Category:</strong> {{this.Category.dataValues.name}}</p> 
+                        </div> 
+                    </div>
+                    </a>
+                </div>
+            </div>
+        {{/each}}
+    </div>
+{{/if}}
+</div>
+</div>

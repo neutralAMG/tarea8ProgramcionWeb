@@ -1,0 +1,50 @@
+<h1 class="display-1 text-center mt-5">SAVE BOOK </h1>
+<form enctype="multipart/form-data" action="/book/book-edit" method="POST" onsubmit="return confirm('You sure you want to save this book?');" class="border p-4 rounded bg-light">
+    <input type="hidden" name="id" id="id" value="{{book.id}}">
+    <div class="mb-3">
+        <label for="title" class="form-label">Title:</label>
+        <input type="text" id="title" name="title" class="form-control" value="{{book.title}}" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="publicationYear" class="form-label">Publication Year:</label>
+        <input type="date" id="publicationYear" name="publicationYear" class="form-control" value="{{book.publicationYear}}"  required>
+    </div>
+
+     <div class="mb-3">
+        <label for="coverImgPath" class="form-label">Cover Img:</label>
+        <input type="file" id="coverImgPath" name="Image" class="form-control">
+    </div>
+
+    <div class="mb-3">
+        <label for="authorId" class="form-label">Author:</label>
+        <select name="authorId" id="authorId" class="form-select" required>
+            <option value="">Select a author</option>
+            {{#each authors}}
+            <option value="{{this.id}}" {{#if (equals this.id  ../book.authorId)}}selected{{/if}}>{{this.name}}</option>
+            {{/each}}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="editorialId" class="form-label">Editorial:</label>
+        <select name="editorialId" id="editorialId" class="form-select" required>
+            <option value="">Select a editorial</option>
+            {{#each editorials}}
+            <option value="{{this.id}}" {{#if (equals this.id  ../book.editorialId)}}selected{{/if}}>{{this.name}}</option>
+            {{/each}}
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="categoryId" class="form-label">Category:</label>
+        <select name="categoryId" id="categoryId" class="form-select" required>
+            <option value="">Select a category</option>
+            {{#each categories}}
+            <option value="{{this.id}}" {{#if (equals this.id  ../book.categoryId)}}selected{{/if}}>{{this.name}}</option>
+            {{/each}}
+        </select>
+    </div>
+         <a href="/book/book-mant" class="btn btn-info">Go back</a>
+         <button type="submit" class="btn btn-primary">save book</button>
+</form>

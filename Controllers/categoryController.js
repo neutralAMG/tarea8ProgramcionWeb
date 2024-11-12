@@ -4,10 +4,16 @@ const categoryMantRoute = "/category/category-mant";
 
 
 exports.GetAllCategoryMant = (req, res, next)=>{
-    category.findAll().then((result) => {
+    category.findAll().then( async (result) => {
 
         const categories = result.map((a) => a.dataValues);
-   
+        await Promise.all(
+            categories.map(async (c) =>{
+                const result = await book.findAndCountAll({where:{categoryId:c.id}});
+                c.bookCount = result.count;
+                return c;
+            })
+        )
         return res.render(getViewByLastPart("mant"),{
            categories: categories,
            IsEmpty: categories.length === 0

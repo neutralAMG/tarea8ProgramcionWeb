@@ -2,15 +2,17 @@ const author = require("../Models/autor");
 const editorial = require("../Models/editorial");
 const category = require("../Models/category");
 const book = require("../Models/book");
-const bookMantRoute = "/author/author-mant";
+const bookMantRoute = "/book/book-mant";
+const transporter = require("../Service/EmailService")
+
 
 exports.GetAllBookMant = (req, res, next)=>{
     book.findAll({include: [{model: author, as: "Author"},{model: editorial, as: "Editorial"},{model: category, as: "Category"}]})
     .then((result) => {
         const books = result.map((a) => a.dataValues);
-   
+        books.map((b) => b.publicationYear = b.publicationYear.toISOString().split("T")[0])
         return res.render(getViewByLastPart("mant"),{
-            books: books,
+           books: books,
            IsEmpty: books.length === 0
         });
    
@@ -20,8 +22,9 @@ exports.GetAllBookIndex = (req, res, next)=>{
     book.findAll({include: [{model: author, as: "Author"},{model: editorial, as: "Editorial"},{model: category, as: "Category"}]})
     .then((result) => {
         const books = result.map((a) => a.dataValues);
+        books.map((b) => b.publicationYear = b.publicationYear.toISOString().split("T")[0])
         return res.render(getViewByLastPart("index"),{
-            books: books,
+           books: books,
            IsEmpty: books.length === 0
         });
    
@@ -34,6 +37,7 @@ exports.GetBookDetail = (req, res, next)=>{
     .then((result) => {
 
         const book = result.dataValues;
+        book.publicationYear = book.publicationYear.toISOString().split("T")[0]
         return res.render(getViewByLastPart("detail"),{
             book: book,
         });
@@ -44,11 +48,11 @@ exports.GetBookDetail = (req, res, next)=>{
 
 exports.GetAddBook = (req, res, next)=>{
     author.findAll().then((authors) => {
-        if(authors.dataValues.length === 0) return res.redirect(bookMantRoute);
         editorial.findAll().then((editorials) => {
-            if(authors.dataValues.length === 0) return res.redirect(bookMantRoute);
             category.findAll().then((categories) => {
-                if(authors.dataValues.length === 0) return res.redirect(bookMantRoute);
+                if (!authors.length || !editorials.length || !categories.length) {
+                    return res.redirect(bookMantRoute);
+                }
                 return res.render(getViewByLastPart("add"),{
                     authors: authors.map((a)=> a.dataValues),
                     editorials: editorials.map((e)=> e.dataValues),
@@ -60,16 +64,30 @@ exports.GetAddBook = (req, res, next)=>{
 };
 
 exports.PostAddBook = (req, res, next)=>{
-    const {title, publicationYear, coverImg, categoryId, authorId, editorialId} = req.body;
-
+    const {title, publicationYear, categoryId, authorId, editorialId} = req.body;
+    const coverImgPath = req.file
+    if (!coverImgPath) return res.redirect(bookMantRoute);
     book.create({
         title,
         publicationYear,
-        coverImg,
+        coverImgPath: "/"+coverImgPath.path,
         categoryId,
         authorId,
         editorialId
-    }).then((result) => res.redirect(bookMantRoute)).catch((err) => console.log(err));
+    }).then((result) =>{
+        res.redirect(bookMantRoute)
+
+       return author.findByPk(authorId).then((a)=>{
+
+           return transporter.sendMail({
+            from:"Your book got publish",
+            to: a.dataValues.email, 
+            subject:"Your book got publish, congratulation",
+            html:"Keep writing and improving as an author"
+        },{})
+        })
+        
+    } ).catch((err) => console.log(err));
 
 };
 
@@ -77,14 +95,12 @@ exports.PostAddBook = (req, res, next)=>{
 exports.GetEditBook = (req, res, next)=>{
     const id = req.params.id;
     author.findAll().then((authors) => {
-        if(authors.dataValues.length === 0) return res.redirect(bookMantRoute);
         editorial.findAll().then((editorials) => {
-            if(authors.dataValues.length === 0) return res.redirect(bookMantRoute);
             category.findAll().then((categories) => {
-                if(authors.dataValues.length === 0) return res.redirect(bookMantRoute);
                     book.findOne({include: [{model: author, as: "Author"},{model: editorial, as: "Editorial"},{model: category, as: "Category"}], where:{id:id}})
                     .then((result) => {
                       const book = result.dataValues;
+                      book.publicationYear = book.publicationYear.toISOString().split("T")[0]
                       return res.render(getViewByLastPart("edit"),{
                         book: book,
                         authors: authors.map((a)=> a.dataValues),
@@ -100,16 +116,21 @@ exports.GetEditBook = (req, res, next)=>{
 
 
 exports.PostEditBook = (req, res, next)=>{
-    const {id, title, publicationYear, coverImg, categoryId, authorId, editorialId} = req.body;
-
-    book.update({
-        title,
-        publicationYear,
-        coverImg,
-        categoryId,
-        authorId,
-        editorialId
-    },{where:{id:id}})
+    const {id, title, publicationYear, categoryId, authorId, editorialId} = req.body;
+    const coverImgPath = req.file
+    book.findByPk(id)
+    .then((bookLastState) => {
+         const bookBeingUpdated =  bookLastState.dataValues;
+         if(!bookBeingUpdated) return res.redirect(bookMantRoute)
+         book.update({
+             title,
+             publicationYear,
+             coverImgPath: coverImgPath ? "/" + coverImgPath.path : bookBeingUpdated.coverImgPath,
+             categoryId,
+             authorId,
+             editorialId
+         },{where:{id:id}})
+      })
     .then((result) => res.redirect(bookMantRoute))
     .catch((err) => console.log(err));
 };

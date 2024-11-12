@@ -3,9 +3,17 @@ const book = require("../Models/book");
 const editorialMantRoute = "/editorial/editorial-mant";
 
 exports.GetAllEditorialMant = (req, res, next)=>{
-    editorial.findAll().then((result) => {
+    editorial.findAll().then(async (result) => {
 
         const editorials = result.map((a) => a.dataValues);
+
+        await Promise.all(
+            editorials.map(async (e) =>{
+                const result = await book.findAndCountAll({where:{editorialId:e.id}});
+                e.bookCount = result.count;
+                return e;
+            })
+        )
    
         return res.render(getViewByLastPart("mant"),{
             editorials: editorials,
