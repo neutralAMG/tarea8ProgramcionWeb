@@ -5,6 +5,9 @@ const book = require("../Models/book");
 const bookMantRoute = "/book/book-mant";
 const transporter = require("../Service/EmailService")
 
+exports.alert = (req, res, next)=>{
+    return res.render("alert",{message: "You ether need to create a author or editorial or category, in order to create a book"})
+}
 
 exports.GetAllBookMant = (req, res, next)=>{
     book.findAll({include: [{model: author, as: "Author"},{model: editorial, as: "Editorial"},{model: category, as: "Category"}]})
@@ -51,7 +54,7 @@ exports.GetAddBook = (req, res, next)=>{
         editorial.findAll().then((editorials) => {
             category.findAll().then((categories) => {
                 if (!authors.length || !editorials.length || !categories.length) {
-                    return res.redirect(bookMantRoute);
+                   return res.redirect("/book/book-add-alert"); 
                 }
                 return res.render(getViewByLastPart("add"),{
                     authors: authors.map((a)=> a.dataValues),
@@ -82,7 +85,7 @@ exports.PostAddBook = (req, res, next)=>{
            return transporter.sendMail({
             from:"Your book got publish",
             to: a.dataValues.email, 
-            subject:"Your book got publish, congratulation",
+            subject:"Your book "+ title +" got publish, congratulation",
             html:"Keep writing and improving as an author"
         },{})
         })
