@@ -1,33 +1,41 @@
 
 <h1 class="display-1 text-center ">BOOK MANTAINANCE</h1>
-<a href="/book/book-add" class="btn btn-success mb-3">New Book</a>
+<div class="d-flex justify-content-center ">
+    <a href="/book/book-add" class="btn btn-success ">New Book</a>
+</div>
 
-{{#if IsEmpty}}
-    <h1 class="text-center">There is no books</h1>
-{{else}}
-    <div class="row">
-        {{#each books}}
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                        <img src="{{coverImgPath}}" alt="{{title}}" class="card-img-top img-responsive">
-                    <div class="card-body">
-                         <h5 class="card-title text-center text-primary">{{this.title}}</h5>
-                         <h5 class="card-title text-center text-primary">{{this.publicationYear}}</h5>
-                     <div class="d-flex justify-content-between">
-                        <p class="card-text text-muted"><strong>Author:</strong> {{this.Author.dataValues.name}}</p>
-                        <p class="card-text  text-muted"><strong>Editorial:</strong> {{this.Editorial.dataValues.name}}</p> 
-                        <p class="card-text  text-muted"><strong>Category:</strong> {{this.Category.dataValues.name}}</p> 
-                      </div>
+<div class="container bg-light mt-2 pt-4">
+    <div class="col-12 col-md-10 mx-auto">
+        {{#if IsEmpty}}
+            <h3 class="text-center text-muted">There are no books available</h3>
+        {{else}}
+            <div class="row">
+                {{#each books}}
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card h-100 shadow-sm">
+                                <img src="{{this.coverImgPath}}" alt="{{this.title}}" class="card-img-top img-fluid rounded-top img-responsive">
+                                
+                                <div class="card-body">
+                                    <h5 class="card-title text-center text-primary">{{this.title}}</h5>
+                                    <h6 class="card-subtitle text-center text-secondary">{{this.publicationYear}}</h6>
+                                    <hr>
+                                    <div class="card-text">
+                                        <p class="text-muted mb-1"><strong>Author:</strong> {{this.Author.dataValues.name}}</p>
+                                        <p class="text-muted mb-1"><strong>Editorial:</strong> {{this.Editorial.dataValues.name}}</p>
+                                        <p class="text-muted"><strong>Category:</strong> {{this.Category.dataValues.name}}</p>
+                                    </div>
+                                </div>
+                                <div class="card-footer text-center">
+                                   <form action="/book/book-delete" style="display: inline;" method="POST" onsubmit="return confirm('You sure you want to delete the book?');">
+                                   <input type="hidden" name="id" value="{{this.id}}"/>
+                                   <button type="submit" class="btn btn-danger me-2">Delete</button>
+                                   </form>
+                                   <a href="/book/book-edit/{{this.id}}" class="btn btn-info">Edit</a>
+                                </div>
+                        </div>
                     </div>
-                    <div class="card-footer text-center">
-                        <form action="/book/book-delete" style="display: inline;" method="POST" onsubmit="return confirm('You sure you want to delete the book?');">
-                            <input type="hidden" name="id" value="{{this.id}}"/>
-                            <button type="submit" class="btn btn-danger me-2">Delete</button>
-                        </form>
-                        <a href="/book/book-edit/{{this.id}}" class="btn btn-info">Edit</a>
-                    </div>
-                </div>
+                {{/each}}
             </div>
-        {{/each}}
+        {{/if}}
     </div>
-{{/if}}
+</div>

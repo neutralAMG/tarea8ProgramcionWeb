@@ -1,30 +1,32 @@
-<h1 class="display-1 text-center mt-5">LIBRARY</h1>
-<div class="col-8">
-  
-{{#if IsEmpty}}
-    <h1 class="text-center">There is no books</h1>
-{{else}}
-    <div class="row">
-        {{#each books}}
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <a href="/book/book-detail/{{this.id}}" class="">
-                    <img src="{{this.coverImgPath}}" alt="{{title}}" class="card-img-top img-responsive">
-               
-                    <div class="card-body">
-                        <h5 class="card-title text-center text-primary">{{this.title}}</h5>
-                        <h5 class="card-title text-center text-primary">{{this.publicationYear}}</h5>
-                        <div class="d-flex justify-content-between">
-                           <p class="card-text text-muted"><strong>Author:</strong> {{this.Author.dataValues.name}}</p>
-                           <p class="card-text  text-muted"><strong>Editorial:</strong> {{this.Editorial.dataValues.name}}</p> 
-                           <p class="card-text  text-muted"><strong>Category:</strong> {{this.Category.dataValues.name}}</p> 
-                        </div> 
+<h1 class="display-1 text-center mt-5 mb-4 text-primary">LIBRARY</h1>
+
+<div class="container">
+    <div class="col-12 col-md-10 mx-auto">
+        {{#if IsEmpty}}
+            <h3 class="text-center text-muted">There are no books available</h3>
+        {{else}}
+            <div class="row">
+                {{#each books}}
+                    <div class="col-lg-4 col-md-6 mb-4 ">
+                        <div class="card h-100 shadow-sm background mask">
+                            <a href="/book/book-detail/{{this.id}}" class="text-decoration-none">
+                                <img src="{{this.coverImgPath}}" alt="{{this.title}}" class="card-img-top img-fluid rounded-top img-responsive">
+                                
+                                <div class="card-body">
+                                    <h5 class="card-title text-center text-primary">{{this.title}}</h5>
+                                    <h6 class="card-subtitle text-center text-secondary">{{this.publicationYear}}</h6>
+                                    <hr>
+                                    <div class="card-text">
+                                        <p class="text-muted mb-1"><strong>Author:</strong> {{this.Author.dataValues.name}}</p>
+                                        <p class="text-muted mb-1"><strong>Editorial:</strong> {{this.Editorial.dataValues.name}}</p>
+                                        <p class="text-muted"><strong>Category:</strong> {{this.Category.dataValues.name}}</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
                     </div>
-                    </a>
-                </div>
+                {{/each}}
             </div>
-        {{/each}}
+        {{/if}}
     </div>
-{{/if}}
-</div>
 </div>
