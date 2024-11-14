@@ -17,7 +17,8 @@
         </thead>
         <tbody>
             {{#each authors}}
-            <th scope="row">{{this.name}}</th>
+            <tr>
+                 <th scope="row">{{this.name}}</th>
             <th>{{this.email}}</th>
             <th>{{this.bookCount}}</th>
             <th> <div class="d-flex justify-content-center gap-2">
@@ -28,6 +29,8 @@
                     <a href="/author/author-edit/{{this.id}}" class="btn btn-info">Edit</a>
                 </div>
                 </th>
+            </tr>
+           
             {{/each}}
         </tbody>
     </table>

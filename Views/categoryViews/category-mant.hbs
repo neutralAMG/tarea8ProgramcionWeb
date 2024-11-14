@@ -17,6 +17,7 @@
         </thead>
         <tbody>
             {{#each categories}}
+            <tr> 
             <th scope="row">{{this.name}}</th>
             <th>{{this.description}}</th>
             <th>{{this.bookCount}}</th>
@@ -28,6 +29,7 @@
                     <a href="/category/category-edit/{{this.id}}" class="btn btn-info">Edit</a>
                 </div>
                 </th>
+                </tr>
             {{/each}}
         </tbody>
     </table>

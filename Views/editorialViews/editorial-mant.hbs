@@ -18,7 +18,8 @@
         </thead>
         <tbody>
             {{#each editorials}}
-            <th scope="row">{{this.name}}</th>
+            <tr>
+                <th scope="row">{{this.name}}</th>
             <th>{{this.phone}}</th>
             <th>{{this.country}}</th>
             <th>{{this.bookCount}}</th>
@@ -30,6 +31,7 @@
                     <a href="/editorial/editorial-edit/{{this.id}}" class="btn btn-info">Edit</a>
                 </div>
                 </th>
+            </tr>
             {{/each}}
         </tbody>
     </table>

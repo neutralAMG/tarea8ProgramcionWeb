@@ -3,6 +3,8 @@ const router = require("express").Router();
 const bookController = require("../Controllers/bookController");
 
 router.get("/book-index",bookController.GetAllBookIndex);
+router.post("/book-filter-name",bookController.GetAllBookIndexFilterName);
+router.post("/book-filter-categories",bookController.GetAllBookIndexFilterCategory);
 router.get("/book-mant",bookController.GetAllBookMant);
 router.get("/book-detail/:id",bookController.GetBookDetail);
 router.get("/book-add",bookController.GetAddBook);

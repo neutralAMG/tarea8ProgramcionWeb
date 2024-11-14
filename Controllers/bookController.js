@@ -3,13 +3,17 @@ const editorial = require("../Models/editorial");
 const category = require("../Models/category");
 const book = require("../Models/book");
 const bookMantRoute = "/book/book-mant";
-const transporter = require("../Service/EmailService")
+const transporter = require("../Service/EmailService");
+const Category = require("../Models/category");
+const {Op} = require("sequelize")
 
 exports.alert = (req, res, next)=>{
     return res.render("alert",{message: "You ether need to create a author or editorial or category, in order to create a book"})
 }
+ 
 
-exports.GetAllBookMant = (req, res, next)=>{
+exports.GetAllBookMant = (req, res, next)  =>{
+
     book.findAll({include: [{model: author, as: "Author"},{model: editorial, as: "Editorial"},{model: category, as: "Category"}]})
     .then((result) => {
         const books = result.map((a) => a.dataValues);
@@ -21,18 +25,62 @@ exports.GetAllBookMant = (req, res, next)=>{
    
        }).catch((err) => console.log(err));
 };
-exports.GetAllBookIndex = (req, res, next)=>{
+
+
+exports.GetAllBookIndex = async (req, res, next)=>{
+    let categories = await Category.findAll();
     book.findAll({include: [{model: author, as: "Author"},{model: editorial, as: "Editorial"},{model: category, as: "Category"}]})
     .then((result) => {
         const books = result.map((a) => a.dataValues);
         books.map((b) => b.publicationYear = b.publicationYear.toISOString().split("T")[0])
         return res.render(getViewByLastPart("index"),{
            books: books,
+           categories: categories.map((c)=> c.dataValues),
            IsEmpty: books.length === 0
         });
    
        }).catch((err) => console.log(err));
 };
+
+exports.GetAllBookIndexFilterName = async (req, res, next)=>{
+    const name = req.body.name
+    
+    let categories = await Category.findAll();
+    book.findAll({ where:{title:name}, include: [{model: author, as: "Author"},{model: editorial, as: "Editorial"},{model: category, as: "Category"}]})
+    .then((result) => {
+        const books = result.map((a) => a.dataValues);
+        books.map((b) => b.publicationYear = b.publicationYear.toISOString().split("T")[0])
+        return res.render(getViewByLastPart("index"),{
+           books: books,
+           categories: categories.map((c)=> c.dataValues),
+           IsEmpty: books.length === 0
+        });
+   
+       }).catch((err) => console.log(err));
+};
+
+exports.GetAllBookIndexFilterCategory= async (req, res, next)=>{
+    let categoriesToFilter = Array.isArray(req.body["categoriesToFilter[]"]) ? req.body["categoriesToFilter[]"] : [req.body["categoriesToFilter[]"]];
+
+    
+    console.log(categoriesToFilter)
+
+    categoriesToFilter = categoriesToFilter.map((c)=> ({categoryId: c}))
+    let categories = await Category.findAll();
+    book.findAll({include: [{model: author, as: "Author"},{model: editorial, as: "Editorial"},{model: category, as: "Category"}], where: { [Op.or]:categoriesToFilter}})
+    .then((result) => {
+        const books = result.map((a) => a.dataValues);
+        books.map((b) => b.publicationYear = b.publicationYear.toISOString().split("T")[0])
+        return res.render(getViewByLastPart("index"),{
+           books: books,
+           categories: categories.map((c)=> c.dataValues),
+           IsEmpty: books.length === 0
+        }); 
+   
+       }).catch((err) => console.log(err));
+};
+
+
 
 exports.GetBookDetail = (req, res, next)=>{
     const id = req.params.id;
