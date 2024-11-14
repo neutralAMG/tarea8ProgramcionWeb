@@ -1,27 +1,41 @@
 <h1 class="display-1 text-center mt-5 mb-4 text-primary">LIBRARY</h1>
-<div>
+
+<div class="row justify-content-center">
+   
+
+   
+    <div class=" card col-12 col-md-3 col-xs-4  mx-auto text-center "> 
+        <div class="card-header">
+            <h2 class="card-header">FILTERS</h2>
+        </div>
+        <div class="card-body">
     <form action="/book/book-filter-name" method="post" class="" require>
         <div class="mb-3" >
-            <label for="name" class="form-label">Name:</label>
+            <label for="name" class="form-label display-4">Name:</label>
             <input name="name" id="name" class="form-control"/>
+            <button class="btn btn-info col-6 mt-2"> filter</button>
         </div>
-        <button class="btn btn-info"> filter</button>
+        
     </form>
     <form action="/book/book-filter-categories" method="post" class="" >
         <div class="mb-3" >
-            <label for="categoriesToFilter" class="form-label">Categories (press ctrl + click to select multiple options): </label>  
+            
+            <label for="categoriesToFilter" class="form-label display-4">Categories: </label>  
             <select class="form-select" name="categoriesToFilter[]" id="categoriesToFilter" multiple required>
                 {{#each categories}}
                 <option value="{{this.id}}">{{this.name}}</option>
                 {{/each}}
             </select>   
+             <button class="btn btn-outline-info col-6 mt-2">filter</button>
          </div> 
-         <button class="btn btn-outline-info">filter</button>
+         <P>(press ctrl + click to select multiple options)</P>
+        
     </form>
+    </div>
     <a href="/book/book-index" class="btn btn-success">unfilter</a>
-</div>
-<div class="container">
-    <div class="col-12 col-md-10 mx-auto">
+    </div> 
+
+    <div class="col-12 col-md-9 col-xs-8 mx-auto">
         {{#if IsEmpty}}
             <h3 class="text-center text-muted">There are no books available</h3>
         {{else}}
